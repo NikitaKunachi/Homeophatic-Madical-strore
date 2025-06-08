@@ -103,7 +103,7 @@ General Features:
 
                         Cart Page
 
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/80bacf78609f4e4ecc1b9e9c6d3dc0953e2e8d4a/readimages/payment.jpg)
 
                         Payment page
 
