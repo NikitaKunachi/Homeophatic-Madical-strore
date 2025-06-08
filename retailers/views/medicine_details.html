@@ -1,0 +1,355 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retailers Module</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <script src="public/js/script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            font-size: 24px;
+        }
+        section {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+        }
+        input, select {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const medicine = urlParams.get('medicine');
+            const price = parseFloat(urlParams.get('price'));
+            const discount = parseInt(urlParams.get('discount'));
+    
+            if (medicine && !isNaN(price)) {
+                document.getElementById('medicine').value = decodeURIComponent(medicine);
+                document.getElementById('price').value = `$${price.toFixed(2)}`;
+            }
+    
+            if (!isNaN(discount)) {
+                document.getElementById('medicine-discount').textContent = `${discount}% off on bulk purchases`;
+            }
+        };
+    </script>
+    
+</head>
+<body>
+    <header>
+        <h1>Homeopathic Medical Store - Retailers</h1>
+    </header>
+
+    <section class="filters">
+        <h2>Search & Filters</h2>
+        <input type="text" id="search" placeholder="Search for medicines...">
+        <select id="sort">
+            <option value="">Sort By</option>
+            <option value="most-sold">Most Sold</option>
+            <option value="highest-discount">Highest Discount</option>
+            <option value="best-rated">Best Ratings</option>
+        </select>
+        <select id="price-range">
+            <option value="">Price Range</option>
+            <option value="0-10">$0 - $10</option>
+            <option value="10-20">$10 - $20</option>
+        </select>
+        <select id="stock-filter">
+            <option value="">Stock Availability</option>
+            <option value="in-stock">In Stock</option>
+            <option value="out-of-stock">Out of Stock</option>
+        </select>
+    </section>
+
+    <section class="medicines">
+        <h2>Available Medicines</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Price</th>
+                    <th>Discount on Bulk</th>
+                    <th>Stock</th>
+                    <th>Add to Cart</th>
+                    <th>Order Now</th>
+                </tr>
+            </thead>
+            <tbody id="medicine-list">
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>$10</td>
+                    <td>10% off on 10+</td>
+                    <td>50</td>
+                    <td><button onclick="redirectToDetails('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="redirectToOrder('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Belladonna" data-price="12" data-stock="30" data-discount="15">
+                    <td>Belladonna</td>
+                    <td>$12</td>
+                    <td>15% off on 15+</td>
+                    <td>30</td>
+                    <td><button onclick="redirectToDetails('Belladonna', 12, 15)">Add to Cart</button></td>
+                    <td><button onclick="redirectToOrder('Belladonna', 12, 15)">Order Now</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        function redirectToDetails(name, price, discount) {
+            window.location.href = `medicine_details.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+        
+        function redirectToOrder(name, price, discount) {
+            window.location.href = `order.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+
+        document.getElementById("search").addEventListener("input", function() {
+            let query = this.value.toLowerCase();
+            document.querySelectorAll("#medicine-list tr").forEach(row => {
+                row.style.display = row.dataset.name.toLowerCase().includes(query) ? "" : "none";
+            });
+        });
+
+        document.getElementById("sort").addEventListener("change", function() {
+            let criteria = this.value;
+            let rows = Array.from(document.querySelectorAll("#medicine-list tr"));
+            rows.sort((a, b) => {
+                if (criteria === "highest-discount") {
+                    return b.dataset.discount - a.dataset.discount;
+                }
+                return 0;
+            });
+            rows.forEach(row => document.getElementById("medicine-list").appendChild(row));
+        });
+    </script>
+<script>
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const medicine = urlParams.get('medicine');
+        const price = parseFloat(urlParams.get('price'));
+
+        if (medicine && !isNaN(price)) {
+            document.getElementById('medicine').value = medicine;
+            document.getElementById('price').value = `$${price.toFixed(2)}`;
+        }
+    };
+</script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retailers Module</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <script src="public/js/script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            font-size: 24px;
+        }
+        section {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+        }
+        input, select {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Homeopathic Medical Store - Retailers</h1>
+    </header>
+
+    <section class="filters">
+        <h2>Search & Filters</h2>
+        <input type="text" id="search" placeholder="Search for medicines...">
+        <select id="sort">
+            <option value="">Sort By</option>
+            <option value="most-sold">Most Sold</option>
+            <option value="highest-discount">Highest Discount</option>
+            <option value="best-rated">Best Ratings</option>
+        </select>
+        <select id="price-range">
+            <option value="">Price Range</option>
+            <option value="0-10">$0 - $10</option>
+            <option value="10-20">$10 - $20</option>
+        </select>
+        <select id="stock-filter">
+            <option value="">Stock Availability</option>
+            <option value="in-stock">In Stock</option>
+            <option value="out-of-stock">Out of Stock</option>
+        </select>
+    </section>
+
+    <section class="medicines">
+        <h2>Available Medicines</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Price</th>
+                    <th>Discount on Bulk</th>
+                    <th>Stock</th>
+                    <th>Add to Cart</th>
+                    <th>Order Now</th>
+                </tr>
+            </thead>
+            <tbody id="medicine-list">
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>$10</td>
+                    <td>10% off on 10+</td>
+                    <td>50</td>
+                    <td><button onclick="redirectToDetails('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="redirectToOrder('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Belladonna" data-price="12" data-stock="30" data-discount="15">
+                    <td>Belladonna</td>
+                    <td>$12</td>
+                    <td>15% off on 15+</td>
+                    <td>30</td>
+                    <td><button onclick="redirectToDetails('Belladonna', 12, 15)">Add to Cart</button></td>
+                    <td><button onclick="redirectToOrder('Belladonna', 12, 15)">Order Now</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        function redirectToDetails(name, price, discount) {
+            window.location.href = `medicine_details.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+        
+        function redirectToOrder(name, price, discount) {
+            window.location.href = `order.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function getQueryParams() {
+                const params = new URLSearchParams(window.location.search);
+                return {
+                    medicine: params.get("medicine"),
+                    price: params.get("price"),
+                    discount: params.get("discount"),
+                };
+            }
+
+            const { medicine, price, discount } = getQueryParams();
+
+            if (medicine) document.querySelector("input[name='medicine']").value = medicine;
+            if (price) document.querySelector("input[name='price']").value = `$${price}`;
+        });
+    </script>
+
+    <input type="text" name="medicine" readonly>
+    <input type="text" name="price" readonly>
+</body>
+</html>

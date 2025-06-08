@@ -1,0 +1,872 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retailers Module</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <script src="public/js/script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            font-size: 24px;
+        }
+        section {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+        }
+        input, select {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Homeopathic Medical Store - Retailers</h1>
+    </header>
+
+    <section class="filters">
+        <h2>Search & Filters</h2>
+        <input type="text" id="search" placeholder="Search for medicines...">
+        <select id="sort">
+            <option value="">Sort By</option>
+            <option value="most-sold">Most Sold</option>
+            <option value="highest-discount">Highest Discount</option>
+            <option value="best-rated">Best Ratings</option>
+        </select>
+        <select id="price-range">
+            <option value="">Price Range</option>
+            <option value="0-10">$0 - $10</option>
+            <option value="10-20">$10 - $20</option>
+        </select>
+        <select id="stock-filter">
+            <option value="">Stock Availability</option>
+            <option value="in-stock">In Stock</option>
+            <option value="out-of-stock">Out of Stock</option>
+        </select>
+    </section>
+
+    <section class="medicines">
+        <h2>Available Medicines</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Price</th>
+                    <th>Discount on Bulk</th>
+                    <th>Stock</th>
+                    <th>Add to Cart</th>
+                    <th>Order Now</th>
+                </tr>
+            </thead>
+            <tbody id="medicine-list">
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>$10</td>
+                    <td>10% off on 10+</td>
+                    <td>50</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Belladonna" data-price="12" data-stock="30" data-discount="15">
+                    <td>Belladonna</td>
+                    <td>$12</td>
+                    <td>15% off on 15+</td>
+                    <td>30</td>
+                    <td><button onclick="addToCart('Belladonna', 12, 15)">Add to Cart</button></td>
+                    <td><button onclick="addToCart('Belladonna', 12, 15)">Order Now</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        function addToCart(name, price, discount) {
+            window.location.href = `medicine_details.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+        
+        function addToCart(name, price, discount) {
+            window.location.href = `order.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+
+        document.getElementById("search").addEventListener("input", function() {
+            let query = this.value.toLowerCase();
+            document.querySelectorAll("#medicine-list tr").forEach(row => {
+                row.style.display = row.dataset.name.toLowerCase().includes(query) ? "" : "none";
+            });
+        });
+
+        document.getElementById("sort").addEventListener("change", function() {
+            let criteria = this.value;
+            let rows = Array.from(document.querySelectorAll("#medicine-list tr"));
+            rows.sort((a, b) => {
+                if (criteria === "highest-discount") {
+                    return b.dataset.discount - a.dataset.discount;
+                }
+                return 0;
+            });
+            rows.forEach(row => document.getElementById("medicine-list").appendChild(row));
+        });
+    </script>
+</body>
+</html> -->
+
+
+ 
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retailers Module</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <script src="public/js/script.js" defer>
+
+        document.getElementById("search").addEventListener("input", function() {
+            let query = this.value.toLowerCase();
+            document.querySelectorAll("#medicine-list tr").forEach(row => {
+                let medicineName = row.querySelector(".medicine-name").textContent.toLowerCase();
+                row.style.display = medicineName.includes(query) ? "" : "none";
+            });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            font-size: 24px;
+        }
+        section {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+        }
+        input, select {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Homeopathic Medical Store - Retailers</h1>
+    </header>
+
+    <section class="filters">
+        <h2>Search & Filters</h2>
+        <input type="text" id="search" placeholder="Search for medicines...">
+        <select id="sort">
+            <option value="">Sort By</option>
+            <option value="most-sold">Most Sold</option>
+            <option value="highest-discount">Highest Discount</option>
+            <option value="best-rated">Best Ratings</option>
+        </select>
+        <select id="price-range">
+            <option value="">Price Range</option>
+            <option value="0-10">$0 - $10</option>
+            <option value="10-20">$10 - $20</option>
+        </select>
+        <select id="stock-filter">
+            <option value="">Stock Availability</option>
+            <option value="in-stock">In Stock</option>
+            <option value="out-of-stock">Out of Stock</option>
+        </select>
+    </section>
+
+    <section class="medicines">
+        <h2>Available Medicines</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Price</th>
+                    <th>Discount on Bulk</th>
+                    <th>Stock</th>
+                    <th>Add to Cart</th>
+                    <th>Order Now</th>
+                </tr>
+            </thead>
+            <tbody id="medicine-list">
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>$10</td>
+                    <td>10% off on 10+</td>
+                    <td>50</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Belladonna" data-price="12" data-stock="30" data-discount="15">
+                    <td>Belladonna</td>
+                    <td>$12</td>
+                    <td>15% off on 15+</td>
+                    <td>30</td>
+                    <td><button onclick="addToCart('Belladonna', 12, 15)">Add to Cart</button></td>
+                    <td><button onclick="addToCart('Belladonna', 12, 15)">Order Now</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        function addToCart(name, price, discount) {
+            window.location.href = `medicine_details.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+        
+        function addToCart(name, price, discount) {
+            window.location.href = `order.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+    </script>
+</body>
+</html>
+ -->
+
+ <!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retailers Module</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <script src="public/js/script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            font-size: 24px;
+        }
+        section {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+        }
+        input, select {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Homeopathic Medical Store - Retailers</h1>
+    </header>
+
+    <section class="filters">
+        <h2>Search & Filters</h2>
+        <input type="text" id="search" placeholder="Search for medicines...">
+        <select id="sort">
+            <option value="">Sort By</option>
+            <option value="most-sold">Most Sold</option>
+            <option value="highest-discount">Highest Discount</option>
+            <option value="best-rated">Best Ratings</option>
+        </select>
+        <select id="price-range">
+            <option value="">Price Range</option>
+            <option value="0-10">$0 - $10</option>
+            <option value="10-20">$10 - $20</option>
+        </select>
+        <select id="stock-filter">
+            <option value="">Stock Availability</option>
+            <option value="in-stock">In Stock</option>
+            <option value="out-of-stock">Out of Stock</option>
+        </select>
+    </section>
+
+    <section class="medicines">
+        <h2>Available Medicines</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Price</th>
+                    <th>Discount on Bulk</th>
+                    <th>Stock</th>
+                    <th>Add to Cart</th>
+                    <th>Order Now</th>
+                </tr>
+            </thead>
+            <tbody id="medicine-list">
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>$10</td>
+                    <td>10% off on 10+</td>
+                    <td>50</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Belladonna" data-price="12" data-stock="30" data-discount="15">
+                    <td>Belladonna</td>
+                    <td>$12</td>
+                    <td>15% off on 15+</td>
+                    <td>30</td>
+                    <td><button onclick="addToCart('Belladonna', 12, 15)">Add to Cart</button></td>
+                    <td><button onclick="addToCart('Belladonna', 12, 15)">Order Now</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+        function addToCart(name, price, discount) {
+            window.location.href = `medicine_details.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+        
+        function addToCart(name, price, discount) {
+            window.location.href = `order.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retailers Module</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <script src="public/js/script.js" defer></script>
+    <style>
+         .logout-container {
+            display: flex;
+            justify-content: flex-end; /* Align button to the right */
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            background-color:rgb(17, 32, 147); /* Red color */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logout-btn:hover {
+            background-color: #cc0000; /* Darker red */
+            transform: scale(1.05);
+        }
+
+        .logout-btn:active {
+            background-color: #990000;
+            transform: scale(0.98);
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #130f8d;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+            font-size: 24px;
+        }
+        section {
+            width: 80%;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #130f8d;
+            padding-bottom: 5px;
+        }
+        input, select {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #130f8d;
+            color: white;
+        }
+        button {
+            background: #130f8d;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #130f8d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Homeopathic Medical Store - Retailers</h1>
+        <button> <a href="http://localhost/homeopathic_storeNEW/login.php" class="logout-btn">Logout</a></button>
+    </header>
+
+    <!-- <section class="filters">
+        <h2>Search & Filters</h2>
+        <input type="text" id="search" placeholder="Search for medicines...">
+        <select id="sort">
+            <option value="">Sort By</option>
+            <option value="most-sold">Most Sold</option>
+            <option value="highest-discount">Highest Discount</option>
+            <option value="best-rated">Best Ratings</option>
+        </select>
+        <select id="price-range">
+            <option value="">Price Range</option>
+            <option value="0-10">00 - 10</option>
+            <option value="10-20">10 - 20</option>
+        </select> -->
+        <!--<select id="stock-filter">
+            <option value="">Stock Availability</option>
+            <option value="in-stock">In Stock</option>
+            <option value="out-of-stock">Out of Stock</option>
+        </select>-->
+    </section>
+
+    <section class="medicines">
+        <h2>Available Medicines</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Price</th>
+                    <th>Discount on Bulk</th>
+                    <th>Stock</th>
+                    <th>Add to Cart</th>
+                    <th>Order Now</th>
+                </tr>
+            </thead>
+            <tbody id="medicine-list">
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>100</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 50)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Arnica Montana', 10, 50)">Order Now</button></td> 
+                    
+                </tr>
+                <tr data-name="Dr Willmar Schwabe India Dizester Herbal" data-price="10" data-stock="50" data-discount="10">
+                    <td>Dr Willmar Schwabe India Dizester Herbal</td>
+                    <td>170</td>
+                    <td>18% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Dr Willmar Schwabe India Dizester Herbal', 10, 50)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Dr Willmar Schwabe India Dizester Herbal', 10, 50)">Order Now</button></td>
+                </tr>
+                <tr data-name="Dr Willmar Schwabe India Dizester Herbal" data-price="10" data-stock="50" data-discount="10">
+                    <td>Dr Willmar Schwabe India Dizester Herbal</td>
+                    <td>60</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Dr Willmar Schwabe India Dizester Herbal', 10, 50)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Dr Willmar Schwabe India Dizester Herbal', 10, 50)">Order Now</button></td>
+                </tr>
+                <tr data-name="Sandalwood" data-price="10" data-stock="40" data-discount="10">
+                    <td>Sandalwood</td>
+                    <td>58</td>
+                    <td>20% off on 10+</td>
+                    <td>670</td>
+                    <td><button onclick="addToCart('Sandalwood', 10, 40)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Sandalwood', 10, 40)">Order Now</button></td>
+                </tr>
+                <tr data-name="Arnica Montana" data-price="10" data-stock="30" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>108</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 30)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Arnica Montana', 10, 30)">Order Now</button></td>
+                </tr>
+                <tr data-name="Arnica Montana" data-price="10" data-stock="200" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>105</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 200)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Arnica Montana', 10, 200)">Order Now</button></td>
+                </tr>
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>90</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>180</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>60</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>90</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>90</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Arnica Montana" data-price="10" data-stock="50" data-discount="10">
+                    <td>Arnica Montana</td>
+                    <td>90</td>
+                    <td>10% off on 10+</td>
+                    <td>500</td>
+                    <td><button onclick="addToCart('Arnica Montana', 10, 10)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Arnica Montana', 10, 10)">Order Now</button></td>
+                </tr>
+                <tr data-name="Belladonna" data-price="12" data-stock="30" data-discount="15">
+                    <td>Belladonna</td>
+                    <td>220</td>
+                    <td>15% off on 15+</td>
+                    <td>300</td>
+                    <td><button onclick="addToCart('Belladonna', 12, 15)">Add to Cart</button></td>
+                    <td><button onclick="orderNow('Belladonna', 12, 15)">Order Now</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- <script>
+        function addToCart(name, price, discount) {
+            window.location.href = `medicine_details.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+        
+        function addToCart(name, price, discount) {
+            window.location.href = `order.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+        }
+
+    </script> -->
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("DOM Loaded, Search functionality initialized.");
+
+        // Search functionality
+        document.getElementById("search").addEventListener("input", function () {
+            let query = this.value.toLowerCase().trim();
+            let rows = document.querySelectorAll("#medicine-list tr");
+
+            rows.forEach(row => {
+                let medicineName = row.cells[0].textContent.toLowerCase(); // Selecting first cell (Medicine Name)
+                if (medicineName.includes(query)) {
+                    row.style.display = ""; // Show the row
+                } else {
+                    row.style.display = "none"; // Hide the row
+                }
+            });
+        });
+    });
+
+    
+        // Sorting functionality
+        document.getElementById("sort").addEventListener("change", function () {
+            let criteria = this.value;
+            let rows = Array.from(document.querySelectorAll("#medicine-list tr"));
+    
+            if (criteria === "highest-discount") {
+                rows.sort((a, b) => {
+                    let discountA = parseInt(a.cells[2].textContent.match(/\d+/) || 0);
+                    let discountB = parseInt(b.cells[2].textContent.match(/\d+/) || 0);
+                    return discountB - discountA;
+                });
+            }
+    
+            let tableBody = document.getElementById("medicine-list");
+            tableBody.innerHTML = ""; // Clear and re-add sorted rows
+            rows.forEach(row => tableBody.appendChild(row));
+        });
+
+    
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function getQueryParams() {
+                const params = new URLSearchParams(window.location.search);
+                return {
+                    medicine: params.get("medicine"),
+                    price: params.get("price"),
+                    discount: params.get("discount"),
+                };
+            }
+
+            const { medicine, price, discount } = getQueryParams();
+
+            if (medicine) document.querySelector("input[name='medicine']").value = medicine;
+            if (price) document.querySelector("input[name='price']").value = `$${price}`;
+        });
+    </script>
+
+    <input type="text" name="medicine" readonly>
+    <input type="text" name="price" readonly>
+
+    <script>
+        document.querySelector("form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const paymentMethod = document.querySelector("select[name='payment_method']").value;
+            if (paymentMethod === "cod") {
+                window.location.href = "cash_on_delivery.html";
+            } else if (paymentMethod === "online") {
+                window.location.href = "online_payment.html";
+            }
+        });
+    </script>
+    <!-- <script>
+        function addToCart(name, price) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+            cart.push({ name, price, quantity: 1 });
+        
+            localStorage.setItem('cart', JSON.stringify(cart));
+        
+            // Redirect to cart.html after adding to cart
+            window.location.href = 'cart.html';
+        }
+        
+    </script> -->
+    <!-- <script>
+            function addToCart(name, price, stock) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                
+                let existingItem = cart.find(item => item.name === name);
+                
+                if (existingItem) {
+                    if (existingItem.quantity + 1 > stock) {
+                        alert('Limited stock available! You cannot add more than ' + stock + ' items.');
+                        return;
+                    }
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({ name, price, stock, quantity: 1 });
+                }
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                
+                // Redirect to cart.html after adding to cart
+                window.location.href = 'cart.html';
+            }
+        </script> -->
+        <script>
+                function addToCart(name, price, stock) {
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    let existingItem = cart.find(item => item.name === name);
+            
+                    let quantityToAdd = prompt(`Enter quantity (Available stock: ${stock}):`);
+                    quantityToAdd = parseInt(quantityToAdd);
+            
+                    // Validate input
+                    if (isNaN(quantityToAdd) || quantityToAdd < 1) {
+                        alert('Please enter a valid quantity.');
+                        return;
+                    }
+            
+                    // Check if adding exceeds available stock
+                    let totalQuantity = existingItem ? existingItem.quantity + quantityToAdd : quantityToAdd;
+                    if (totalQuantity > stock) {
+                        alert(`Stock limit exceeded! Available stock: ${stock}`);
+                        return;
+                    }
+            
+                    if (existingItem) {
+                        existingItem.quantity += quantityToAdd;
+                    } else {
+                        cart.push({ name, price, quantity: quantityToAdd });
+                    }
+            
+                    localStorage.setItem('cart', JSON.stringify(cart));
+            
+                    alert(`${quantityToAdd} items added to cart.`);
+                    window.location.href = 'cart.php';
+                }
+            </script>
+            <script>
+                function orderNow(name, price, discount) {
+                    window.location.href = `order.html?medicine=${encodeURIComponent(name)}&price=${price}&discount=${discount}`;
+                }
+            </script>
+            
+            
+    
+</body>
+</html>
+

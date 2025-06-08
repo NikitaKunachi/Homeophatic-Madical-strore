@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="public/css/styles.css">
+    <script>
+        window.onload = function() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartContainer = document.getElementById('checkout-items');
+            let totalAmount = 0;
+            
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<tr><td colspan="4">No items in the cart.</td></tr>';
+            } else {
+                cart.forEach(item => {
+                    const itemTotal = item.quantity * item.price;
+                    totalAmount += itemTotal;
+                    const row = `<tr>
+                        <td>${item.name}</td>
+                        <td>$${item.price}</td>
+                        <td>${item.quantity}</td>
+                        <td>$${itemTotal.toFixed(2)}</td>
+                    </tr>`;
+                    cartContainer.innerHTML += row;
+                });
+            }
+            document.getElementById('total-amount').textContent = `$${totalAmount.toFixed(2)}`;
+        };
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Checkout</h1>
+    </header>
+    <section class="checkout">
+        <h2>Order Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Medicine Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="checkout-items">
+                <!-- Checkout items will be dynamically inserted here -->
+            </tbody>
+        </table>
+        <h3>Total Amount: <span id="total-amount">$0.00</span></h3>
+        
+        <h2>Choose Payment Method</h2>
+        <form action="api/process_order.php" method="post">
+            <input type="hidden" name="cart" id="cart-data">
+            <label>
+                <input type="radio" name="payment_method" value="cod" checked> Cash on Delivery
+            </label>
+            <label>
+                <input type="radio" name="payment_method" value="online"> Online Payment
+            </label>
+            <button type="submit" onclick="submitOrder()">Place Order</button>
+        </form>
+    </section>
+    
+    <script>
+        function submitOrder() {
+            document.getElementById('cart-data').value = localStorage.getItem('cart');
+            localStorage.removeItem('cart');
+        }
+    </script>
+</body>
+</html>
