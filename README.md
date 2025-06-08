@@ -109,38 +109,38 @@ General Features:
 
 🧑‍⚕️ Retailer Module
 
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/4d27cbc7391de033934d1c80c7dc7fb5dd00a271/readimages/rHome.png)
 
                      Retailer Dashboard
 
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/4d27cbc7391de033934d1c80c7dc7fb5dd00a271/readimages/rcart.png)
 
                        Retailer Cart
 
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/4d27cbc7391de033934d1c80c7dc7fb5dd00a271/readimages/rpayment.png)
 
                       Razorpay Checkout 
 
 
 🔐 Admin Module
 
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/420894d04830d54cc83e4c0ba1b2c2a159e5a8ee/readimages/alogin.jpg)
 
                         Admin Login
                         
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/420894d04830d54cc83e4c0ba1b2c2a159e5a8ee/readimages/aadmindashboard.jpg)
                         
                         Dashboard
                         
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/4d27cbc7391de033934d1c80c7dc7fb5dd00a271/readimages/amanagemedicine.jpg)
 
                         Manage Medicines
                         
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/4d27cbc7391de033934d1c80c7dc7fb5dd00a271/readimages/aorderdetails.jpg)
 
                         Order Tracking
 
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/4d27cbc7391de033934d1c80c7dc7fb5dd00a271/readimages/ausermanage.jpg)
 
                         User Management
 
