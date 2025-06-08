@@ -92,7 +92,20 @@ General Features:
 🌐 Customer Module
 
 ![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/9665392ef8b422d66600cab7e3ca961550ce06bb/readimages/cus%20home.jpg)
+               
+                        Home Page
 
+![image_alt]()
+
+                        Store Page
+
+![image_alt]()
+
+                        Cart Page
+
+![image_alt]()
+
+                        Payment page
 
     
 
