@@ -95,7 +95,7 @@ General Features:
                
                         Home Page
 
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/e351cc6b01fad6661b3b4dbd1a93021361a3bcfd/readimages/store%20page.jpg)
 
                         Store Page
 
