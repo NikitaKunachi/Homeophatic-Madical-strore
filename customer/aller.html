@@ -1,0 +1,515 @@
+<?php
+session_start();
+include('../config/db.php');
+
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: ../login.php');
+    exit();
+}
+
+// Initialize errors array
+$errors = [];
+
+// Handle Adding, Updating, Deleting, and Searching Medicines
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['add_medicine'])) {
+        $medicine_id = $_POST['medicine_id'];  // Get the medicine_id
+        $name = $_POST['name'];
+        $price = $_POST['price'];
+        $dosage = $_POST['dosage'];
+        $description = $_POST['description'];
+        
+
+        // Additional validation in PHP
+        if (!preg_match("/^[a-zA-Z0-9]+$/", $medicine_id)) {
+            $errors[] = "Invalid Medicine ID.";
+        }
+        if (!preg_match("/^[a-zA-Z0-9 ]+$/", $name)) {
+            $errors[] = "Invalid Medicine Name.";
+        }
+        if (!preg_match("/^[0-9]+(\.[0-9]{1,2})?$/", $price) || $price <= 0) {
+            $errors[] = "Invalid price format.";
+        }
+        if (!preg_match("/^[a-zA-Z0-9 ]+$/", $dosage)) {
+            $errors[] = "Invalid dosage format.";
+        }
+        if (strlen($description) > 255) {
+            $errors[] = "Description must be under 255 characters.";
+        }
+
+        // If no errors, proceed to insert
+        if (empty($errors)) {
+            $query = $conn->prepare("INSERT INTO medicines (medicine_id, name, price, dosage, description) VALUES (:medicine_id, :name, :price, :dosage, :description)");
+            $query->bindParam(':medicine_id', $medicine_id);
+            $query->bindParam(':name', $name);
+            $query->bindParam(':price', $price);
+            $query->bindParam(':dosage', $dosage);
+            $query->bindParam(':description', $description);
+
+            if ($query->execute()) {
+                echo "<div class='success'>Medicine added successfully!</div>";
+            } else {
+                echo "<div class='error'>Failed to add medicine.</div>";
+            }
+        } else {
+            foreach ($errors as $error) {
+                echo "<div class='error'>$error</div>";
+            }
+        }
+    } elseif (isset($_POST['update_medicine'])) {
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $price = $_POST['price'];
+        $stock = $_POST['stock'];
+
+        // Additional validation for update
+        if (!preg_match("/^[a-zA-Z0-9 ]+$/", $name)) {
+            $errors[] = "Invalid Medicine Name.";
+        }
+        if (!preg_match("/^[0-9]+(\.[0-9]{1,2})?$/", $price) || $price <= 0) {
+            $errors[] = "Invalid price format.";
+        }
+        if (!filter_var($stock, FILTER_VALIDATE_INT) || $stock < 0) {
+            $errors[] = "Stock must be a positive integer.";
+        }
+
+        // If no errors, proceed to update
+        if (empty($errors)) {
+            $query = $conn->prepare("UPDATE medicines SET name = :name, price = :price, stock = :stock WHERE medicine_id = :id");
+            $query->bindParam(':id', $id);
+            $query->bindParam(':name', $name);
+            $query->bindParam(':price', $price);
+            $query->bindParam(':stock', $stock);
+
+            if ($query->execute()) {
+                echo "<div class='success'>Medicine updated successfully!</div>";
+            } else {
+                echo "<div class='error'>Failed to update medicine.</div>";
+            }
+        } else {
+            foreach ($errors as $error) {
+                echo "<div class='error'>$error</div>";
+            }
+        }
+    } elseif (isset($_POST['delete_medicine'])) {
+        $id = $_POST['id'];
+
+        $query = $conn->prepare("DELETE FROM medicines WHERE medicine_id = :id");
+        $query->bindParam(':id', $id);
+
+        if ($query->execute()) {
+            echo "<div class='success'>Medicine deleted successfully!</div>";
+        } else {
+            echo "<div class='error'>Failed to delete medicine.</div>";
+        }
+    } elseif (isset($_POST['search_medicine'])) {
+        $search_term = $_POST['search_term'];
+
+        $query = $conn->prepare("SELECT * FROM medicines WHERE name LIKE :search OR medicine_id = :search_exact");
+        $query->bindValue(':search', "%" . $search_term . "%");
+        $query->bindValue(':search_exact', $search_term);
+        $query->execute();
+        $search_results = $query->fetchAll(PDO::FETCH_ASSOC);
+    } elseif (isset($_POST['add_stock'])) {
+        $medicine_id = $_POST['medicine_id'];
+        $stock = $_POST['stock'];
+
+        // Additional validation for stock
+        if (!preg_match("/^[a-zA-Z0-9]+$/", $medicine_id)) {
+            $errors[] = "Invalid Medicine ID.";
+        }
+        if (!filter_var($stock, FILTER_VALIDATE_INT) || $stock < 0) {
+            $errors[] = "Stock must be a positive integer.";
+        }
+
+        // If no errors, proceed to update stock
+        if (empty($errors)) {
+            $query = $conn->prepare("UPDATE medicines SET stock = stock + :stock WHERE medicine_id = :medicine_id");
+            $query->bindParam(':medicine_id', $medicine_id);
+            $query->bindParam(':stock', $stock);
+
+            if ($query->execute()) {
+                echo "<div class='success'>Stock updated successfully!</div>";
+            } else {
+                echo "<div class='error'>Failed to update stock.</div>";
+            }
+        } else {
+            foreach ($errors as $error) {
+                echo "<div class='error'>$error</div>";
+            }
+        }
+    }
+}
+
+// Fetch Medicines
+$query = $conn->prepare("SELECT * FROM medicines");
+$query->execute();
+$medicines = $query->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Medicines</title>
+
+    <style>
+                /* Additional inline CSS for logout form */
+        .logout-container {
+            display: flex;
+            justify-content: flex-end; /* Align button to the right */
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            background-color:rgb(17, 32, 147); /* Red color */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logout-btn:hover {
+            background-color: #cc0000; /* Darker red */
+            transform: scale(1.05);
+        }
+
+        .logout-btn:active {
+            background-color: #990000;
+            transform: scale(0.98);
+        }
+        body { 
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://png.pngtree.com/background/20230617/original/pngtree-assorted-pharmaceutical-pills-tablets-and-capsules-on-blue-background-3d-rendering-picture-image_3700317.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #333;
+        }
+
+        header {
+            background-color: rgba(0, 35, 102, 0.8);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .container {
+            padding: 40px;
+            text-align: center;
+        }
+
+        form {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        form input, form select, form button, form textarea {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form button {
+            background-color: #002366;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        form button:hover {
+            background-color: #001a4d;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #002366;
+            color: white;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .success {
+            margin: 10px auto;
+            padding: 10px;
+            background-color: #d9edf7;
+            color: #31708f;
+            max-width: 500px;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .error {
+            margin: 10px auto;
+            padding: 10px;
+            background-color: #f2dede;
+            color: #a94442;
+            max-width: 500px;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .search-results {
+            margin: 20px auto;
+            max-width: 90%;
+        }
+
+        .search-results h3 {
+            margin-bottom: 10px;
+        }
+
+        .search-results table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .search-results th, .search-results td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .search-results th {
+            background-color: #002366;
+            color: white;
+        }
+
+        nav {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        nav a {
+            color: #002366;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            border: 2px solid #002366;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #002366;
+            color: white;
+        }
+    </style>
+    <script>
+        function validateForm() {
+            let medicineId = document.forms["medicineForm"]["medicine_id"].value;
+            let name = document.forms["medicineForm"]["name"].value;
+            let price = document.forms["medicineForm"]["price"].value;
+            let dosage = document.forms["medicineForm"]["dosage"].value;
+            let description = document.forms["medicineForm"]["description"].value;
+            let errorMessage = "";
+
+            if (!/^[a-zA-Z0-9]+$/.test(medicineId)) {
+                errorMessage += "Invalid Medicine ID.\n";
+            }
+            if (!/^[a-zA-Z0-9 ]+$/.test(name)) {
+                errorMessage += "Invalid Medicine Name.\n";
+            }
+            if (!/^[0-9]+(\.[0-9]{1,2})?$/.test(price) || price <= 0) {
+                errorMessage += "Invalid Price format.\n";
+            }
+            if (!/^[a-zA-Z0-9 ]+$/.test(dosage)) {
+                errorMessage += "Invalid Dosage format.\n";
+            }
+            if (description.length > 255) {
+                errorMessage += "Description must be under 255 characters.\n";
+            }
+
+            if (errorMessage) {
+                alert(errorMessage);
+                return false;
+            }
+            return true;
+        }
+
+        function validateStockForm() {
+            let medicineId = document.forms["stockForm"]["medicine_id"].value;
+            let stock = document.forms["stockForm"]["stock"].value;
+            let errorMessage = "";
+
+            if (!/^[a-zA-Z0-9]+$/.test(medicineId)) {
+                errorMessage += "Invalid Medicine ID.\n";
+            }
+            if (!Number.isInteger(Number(stock)) || stock < 0) {
+                errorMessage += "Stock must be a positive integer.\n";
+            }
+
+            if (errorMessage) {
+                alert(errorMessage);
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Manage Medicines</h1>
+        <a href="dashboard.php" class="logout-btn">Logout</a>
+    </header>
+    <div class="container">
+        <!-- Search Medicine Form -->
+        <form method="POST">
+            <h2>Search Medicine</h2>
+            <input type="text" name="search_term" placeholder="Enter Medicine Name or ID" required>
+            <button type="submit" name="search_medicine">Search</button>
+        </form>
+
+        <!-- Search Results -->
+        <?php if (isset($search_results)) { ?>
+            <div class="search-results">
+                <h3>Search Results:</h3>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Dosage</th>
+                        <th>Description</th>
+                    </tr>
+                    <?php if (count($search_results) > 0) { ?>
+                        <?php foreach ($search_results as $medicine) { ?>
+                            <tr>
+                                <td><?php echo $medicine['medicine_id']; ?></td>
+                                <td><?php echo $medicine['name']; ?></td>
+                                <td><?php echo $medicine['price']; ?></td>
+                                <td><?php echo $medicine['dosage']; ?></td>
+                                <td><?php echo $medicine['description']; ?></td>
+                            </tr>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="5">No medicines found.</td>
+                        </tr>
+                    <?php } ?>
+                </table>
+            </div>
+        <?php } ?>
+
+        <!-- Add Medicine Form -->
+        <form name="medicineForm" method="POST" onsubmit="return validateForm()">
+            <h2>Add Medicine</h2>
+            <input type="text" name="medicine_id" placeholder="Medicine ID" required>
+            <input type="text" name="name" placeholder="Medicine Name" required>
+            <input type="number" name="price" placeholder="Price" required>
+            <input type="text" name="dosage" placeholder="Dosage" required>
+            <textarea name="description" placeholder="Description" required></textarea>
+            <button type="submit" name="add_medicine">Add Medicine</button>
+        </form>
+
+        <!-- Update Medicine Form -->
+        <form method="POST">
+            <h2>Update Medicine</h2>
+            <select name="id" required>
+                <option value="" disabled selected>Select Medicine</option>
+                <?php foreach ($medicines as $medicine) { ?>
+                    <option value="<?php echo $medicine['medicine_id']; ?>">
+                        <?php echo $medicine['name']; ?>
+                    </option>
+                <?php } ?>
+            </select>
+            <input type="text" name="name" placeholder="Medicine Name" required>
+            <input type="number" name="price" placeholder="Price" required>
+            <input type="number" name="stock" placeholder="Stock" required>
+            <button type="submit" name="update_medicine">Update Medicine</button>
+        </form>
+
+        <!-- Delete Medicine Form -->
+        <form method="POST">
+            <h2>Delete Medicine</h2>
+            <select name="id" required>
+                <option value="" disabled selected>Select Medicine</option>
+                <?php foreach ($medicines as $medicine) { ?>
+                    <option value="<?php echo $medicine['medicine_id']; ?>">
+                        <?php echo $medicine['name']; ?>
+                    </option>
+                <?php } ?>
+            </select>
+            <button type="submit" name="delete_medicine">Delete Medicine</button>
+        </form>
+
+        <!-- Add Stock Form -->
+        <form name="stockForm" method="POST" onsubmit="return validateStockForm()">
+            <h2>Add Stock</h2>
+            <select name="medicine_id" required>
+                <option value="" disabled selected>Select Medicine</option>
+                <?php foreach ($medicines as $medicine) { ?>
+                    <option value="<?php echo $medicine['medicine_id']; ?>">
+                        <?php echo $medicine['name']; ?>
+                    </option>
+                <?php } ?>
+            </select>
+            <input type="number" name="stock" placeholder="Stock to Add" required>
+            <button type="submit" name="add_stock">Add Stock</button>
+        </form>
+
+        <!-- Display Medicines -->
+        <h2>Medicines List</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Dosage</th>
+                <th>Stock</th>
+            </tr>
+            <?php foreach ($medicines as $medicine) { ?>
+                <tr>
+                    <td><?php echo $medicine['medicine_id']; ?></td>
+                    <td><?php echo $medicine['name']; ?></td>
+                    <td><?php echo $medicine['price']; ?></td>
+                    <td><?php echo $medicine['dosage']; ?></td>
+                    <td><?php echo $medicine['stock']; ?></td>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
+</body>
+</html>
