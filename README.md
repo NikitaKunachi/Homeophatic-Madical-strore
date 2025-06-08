@@ -107,7 +107,67 @@ General Features:
 
                         Payment page
 
-    
+🧑‍⚕️ Retailer Module
+
+![image_alt]()
+
+                     Retailer Dashboard
+
+![image_alt]()
+
+                       Retailer Cart
+
+![image_alt]()
+
+                      Razorpay Checkout 
+
+
+🔐 Admin Module
+
+![image_alt]()
+
+                        Admin Login
+                        
+![image_alt]()
+                        
+                        Dashboard
+                        
+![image_alt]()
+
+                        Manage Medicines
+                        
+![image_alt]()
+
+                        Order Tracking
+
+![image_alt]()
+
+                        User Management
+
+
+
+🧾 Conclusion
+
+                The Padma Homeopathic Medical Store digitizes traditional homeopathy retail by offering a reliable, scalable, and secure platform for medicine distribution. It enhances user trust, accessibility, and business growth by combining modern web tech with robust e-commerce features.
+
+👨‍💻 Authors
+
+        Nikita Kunachi - GitHub
+
+📚 References
+
+        PHP Documentation
+        
+        MySQL Docs
+        
+        Bootstrap Docs
+        
+        Razorpay API
+        
+        Project Tunnel, Developer.com, W3Schools
+
+
+
 
      
 
