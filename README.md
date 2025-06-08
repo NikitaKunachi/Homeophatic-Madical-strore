@@ -99,7 +99,7 @@ General Features:
 
                         Store Page
 
-![image_alt]()
+![image_alt](https://github.com/NikitaKunachi/Homeophatic-Madical-strore/blob/105662725ced70857df4ae55c933a87f339294d4/readimages/cart%20page.jpg)
 
                         Cart Page
 
